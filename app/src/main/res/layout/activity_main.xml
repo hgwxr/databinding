@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="user"
+            type="com.example.administrator.databinding.User"/>
+    </data>
+<RelativeLayout
+   android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.administrator.databinding.MainActivity">
+
+    <TextView
+        tools:text="@string/app_name"
+        android:gravity="center"
+        android:text="@{user.userName}"
+        android:onClick="@{user.onClick}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
+</layout>
