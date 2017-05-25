@@ -13,10 +13,10 @@ android {
             storePassword props['KEYSTORE_PASSWORD']
         }
         debug {
-            keyAlias 'databinding'
-            keyPassword '123456'
-            storeFile file('F:/kotlin_codes/databinding/config/databinding.jks')
-            storePassword '123456'
+            keyAlias props['KEY_ALIAS']
+            keyPassword props['KEY_PASSWORD']
+            storeFile  file(props['KEY_STORE_FILE'])
+            storePassword props['KEYSTORE_PASSWORD']
         }
     }
     compileSdkVersion config.compileSdkVersion
@@ -43,7 +43,6 @@ android {
             minifyEnabled false
             debuggable true
             signingConfig signingConfigs.debug
-
         }
         android.applicationVariants.all { variant ->
             variant.outputs.all {
@@ -55,7 +54,6 @@ android {
                 }
             }
         }
-
     }
     dataBinding {
         enabled true
