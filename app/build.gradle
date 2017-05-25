@@ -1,6 +1,24 @@
 apply plugin: 'com.android.application'
 def config=rootProject.ext
+//加载签名配置的文件
+Properties props = new Properties()
+props.load(new
+        FileInputStream(file("../config/sign.properties")))
 android {
+    signingConfigs {
+        release {
+            keyAlias props['KEY_ALIAS']
+            keyPassword props['KEY_PASSWORD']
+            storeFile  file(props['KEY_STORE_FILE'])
+            storePassword props['KEYSTORE_PASSWORD']
+        }
+        debug {
+            keyAlias 'databinding'
+            keyPassword '123456'
+            storeFile file('F:/kotlin_codes/databinding/config/databinding.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion config.compileSdkVersion
     buildToolsVersion config.buildToolsVersion
     defaultConfig {
@@ -10,18 +28,60 @@ android {
         versionCode config.versionCode
         versionName config.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField "Boolean", "IS_DEBUG", 'true'
     }
     buildTypes {
+
         release {
-            minifyEnabled false
+            zipAlignEnabled true
+            minifyEnabled false//是否启动混淆
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            buildConfigField "Boolean", "IS_DEBUG", 'false'
         }
+        debug {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.debug
+
+        }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                def appName = variant.name;
+                if (appName.equals("debug")) {
+                    outputFileName = "${variant.name}-${variant.versionName}-${releaseTime()}.apk"
+                } else {
+                    outputFileName = "${variant.name}-${variant.versionName}.apk"
+                }
+            }
+        }
+
     }
     dataBinding {
         enabled true
     }
+    productFlavors {
+        free {
+            flavorDimensions "versionCode"
+            applicationId "com.example.administrator.databinding.free"
+        }
+        charge {
+            flavorDimensions "versionCode"
+            applicationId "com.example.administrator.databinding.charge"
+        }
+    }
+}
+// 获取格式化时间，用来标识打包时间，同时避免命名冲突
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy_MM_dd_HHmm')
+    return formattedDate
 }
 def dependenciesAll=config.dependencies
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd_HHmm", TimeZone.getTimeZone("UTC"))
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

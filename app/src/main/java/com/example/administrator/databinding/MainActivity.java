@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.administrator.databinding.databinding.ActivityMainBinding;
 
@@ -18,5 +19,6 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.setUser(user);
         user.setUserName("recyclerview");
         user.setuId("0");
+        Toast.makeText(this,new CommDifferent().getString(),Toast.LENGTH_LONG).show();
     }
 }
